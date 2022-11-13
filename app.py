@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pyaudio
-import wave
+import sounddevice as sd
+import scipy.io.wavfile as wf
 import os
 
 # Streamlit executa repetidament tot el codi escrit,
@@ -15,41 +15,11 @@ df = pd.read_csv('dades.csv')
 if st.button("Record"):
 
     # -- Record and save audio --
-    chunk = 1024  # Record in chunks of 1024 samples
-    sample_format = pyaudio.paInt16  # 16 bits per sample
-    channels = 2
-    sampling_rate = 16000  # Record at 44100 samples per second
-    seconds = 5
-    filename = "recording.wav"
-
-    p = pyaudio.PyAudio()  # Create an interface to PortAudio
-
-    stream = p.open(format=sample_format,
-                    channels=channels,
-                    rate=sampling_rate,
-                    frames_per_buffer=chunk,
-                    input=True)
-
-    frames = []  # Initialize array to store frames
-
-    # Store data in chunks for 3 seconds
-    for i in range(0, int(sampling_rate / chunk * seconds)):
-        data = stream.read(chunk)
-        frames.append(data)
-
-    # Stop and close the stream 
-    stream.stop_stream()
-    stream.close()
-    # Terminate the PortAudio interface
-    p.terminate()
-
-    # Save the recorded data as a WAV file
-    wf = wave.open(filename, 'wb')
-    wf.setnchannels(channels)
-    wf.setsampwidth(p.get_sample_size(sample_format))
-    wf.setframerate(sampling_rate)
-    wf.writeframes(b''.join(frames))
-    wf.close()
+    sampling_rate = 16000  # Sample rate
+    seconds = 5  # Duration of recording
+    myrecording = sd.rec(int(seconds * sampling_rate), samplerate=sampling_rate, channels=2)
+    sd.wait()  # Wait until recording is finished
+    wf.write('recording.wav', sampling_rate, myrecording)  # Save as WAV file
 
     # -- Load and transcript audio --
     with st.spinner('Loading speech recognition models'):
@@ -60,13 +30,13 @@ if st.button("Record"):
     with st.spinner('Transcipting audio'):
         import librosa
         import torch
-        speech, rate = librosa.load(filename, sr=sampling_rate)
+        speech, rate = librosa.load("recording.wav", sr=sampling_rate)
         input_audio = processor(speech, return_tensors='pt', sampling_rate=sampling_rate).input_values
         logits = model(input_audio).logits
         predicted_ids = torch.argmax(logits, dim =-1)
         transcriptions = processor.decode(predicted_ids[0]).lower()
 
-    st.write('Transcripted text: ' + transcriptions)
+    st.write('Transciprted text: ' + transcriptions)
 
     # -- Analyze if it's an emergency --
 

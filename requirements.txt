@@ -1,8 +1,7 @@
 streamlit
 pandas
-pyaudio
-wave
-os
+sounddevice
+scipy
 transformers
 librosa
 torch
