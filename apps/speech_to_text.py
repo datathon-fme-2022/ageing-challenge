@@ -6,6 +6,7 @@ def app():
 
     st.markdown(
         """
+        The aim of this part is to obtain some text after a recording
     After recording an audio, we need to transcript the text so that we can later
     analyze with NLP whether the elder has an important issue. We used a pretrained
     Speech recognition model
@@ -36,3 +37,11 @@ predicted_ids = torch.argmax(logits, dim =-1)
 transcriptions = processor.decode(predicted_ids[0]).lower()
 print(transcriptions)
 ''')
+
+    st.markdown('An example that this code produces will be a string like:')
+    st.code('''
+
+print("Result", transcriptions)
+''')
+    st.markdown('*Result*: hello i need help need a doctor')
+
