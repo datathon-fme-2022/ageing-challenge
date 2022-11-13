@@ -60,3 +60,12 @@ response = co.classify(
 //Classification<prediction: "Emergency", confidence: 0.9980647>
 //Classification<prediction: "False Alarm", confidence: 0.9678431>""")
 
+    with st.expander("Do you want to get this code? Go to:"):
+        st.markdown(
+            """
+            Check it out! [GitHub](https://github.com/datathon-fme-2022/ageing-challenge)
+            
+            Hope you like it!
+
+            """
+        )

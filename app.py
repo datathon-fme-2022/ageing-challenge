@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, render_template
 from flask_mail import Mail, Message
-from flask_googlemaps import GoogleMaps, Map
 
 app = Flask(__name__)
 
@@ -11,8 +10,6 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'awatchdata2022@gmail.com'
 app.config['MAIL_PASSWORD'] = 'rwxvtlmbzpbpeurv'
 app.config['MAIL_USE_TLS'] = False
-
-GoogleMaps(app)
 
 mail = Mail(app)
 
