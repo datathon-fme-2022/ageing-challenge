@@ -27,40 +27,11 @@ def emergency():
     msg = Message('New health alert near you!', sender ='awatchdata2022@gmail.com',
         recipients = ['andreu.vallhernandez@gmail.com'])
     print(content)
-    msg.body = f'{content["name"]}: {content["message"]}\nLocated at coordinates latitude {content["lat"]}º longitude {content["lng"]}º' 
+    msg.html = render_template('message.html', 
+                            name=content['name'],
+                            latitude=content['lat'],
+                            longitude=content['lng'],
+                            sentence=content['message'])
+    #msg.body = f'{content["name"]}: {content["message"]}\nLocated at coordinates latitude {content["lat"]}º longitude {content["lng"]}º' 
     mail.send(msg)
     return "Message sent!"
-
-@app.route('/map')
-def public_map():
-    return render_template('embedded_map.html')
-
-@app.route("/")
-def mapview():
-    # creating a map in the view
-    mymap = Map(
-        identifier="view-side",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[(37.4419, -122.1419)]
-    )
-    sndmap = Map(
-        identifier="sndmap",
-        lat=37.4419,
-        lng=-122.1419,
-        markers=[
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-             'lat': 37.4419,
-             'lng': -122.1419,
-             'infobox': "<b>Hello World</b>"
-          },
-          {
-             'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-             'lat': 37.4300,
-             'lng': -122.1400,
-             'infobox': "<b>Hello World from other place</b>"
-          }
-        ]
-    )
-    return render_template('example.html', mymap=mymap, sndmap=sndmap)
