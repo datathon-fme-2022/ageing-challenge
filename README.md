@@ -13,8 +13,13 @@ In future iterations, the idea is that instead of being a web app it will be ava
 In order to be able to use the code, a Python version of 3.10 is required to ensure correct operation. It is recommended to create a virtual environment and install the requirements.txt dependencies. Once this is done run the following command:
 
 ```shell
+    pip install -r requirements.txt
     streamlit run main_app.py
 ```
+
+![alt text](images/text.jpg)
+![alt text](images/mapa.jpg)
+
 
 ## Acknowledgments 
 
