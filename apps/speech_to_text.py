@@ -2,15 +2,37 @@ import streamlit as st
 
 
 def app():
-    st.title("Home")
+    st.title("Speech to text")
 
-    st.header("Introduction")
     st.markdown(
         """
-    This site demostrates how to build a multi-page [Earth Engine](https://earthengine.google.com) App using [streamlit](https://streamlit.io) and [geemap](https://geemap.org).
-    You can deploy the app on various cloud platforms, such as [share.streamlit.io](https://share.streamlit.io) or [Heroku](https://heroku.com).
-    Make sure you set `EARTHENGINE_TOKEN='your-token'` as an environment variable (secret) on the cloud platform.
-    - **Web App:** <https://gishub.org/geemap-apps>
-    - **Github:** <https://github.com/giswqs/geemap-apps>
+    After recording an audio, we need to transcript the text so that we can later
+    analyze with NLP whether the elder has an important issue. We used a pretrained
+    Speech recognition model
     """
     )
+
+    st.code('''
+from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
+
+processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+''')
+
+    st.markdown('We load the recorded audio from the file input.wav')
+
+    st.code('''
+import librosa
+
+speech, rate = librosa.load("input.wav", sr=16_000)
+input_audio = processor(speech, return_tensors = 'pt', sampling_rate=16_000).input_values
+''')
+
+    st.markdown('And then the translation is as easy as:')
+
+    st.code('''
+logits = model(input_audio).logits
+predicted_ids = torch.argmax(logits, dim =-1)
+transcriptions = processor.decode(predicted_ids[0]).lower()
+print(transcriptions)
+''')
