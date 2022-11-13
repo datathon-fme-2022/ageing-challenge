@@ -1,0 +1,9 @@
+streamlit
+pandas
+sounddevice
+scipy
+transformers
+librosa
+torch
+cohere
+geocoder
