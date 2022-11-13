@@ -24,10 +24,10 @@ geo_position={
 @app.route('/emergency', methods=['POST'])
 def emergency():
     content = request.json
-    msg = Message('Hello from the other side!', sender ='awatchdata2022@gmail.com',
+    msg = Message('New health alert near you!', sender ='awatchdata2022@gmail.com',
         recipients = ['andreu.vallhernandez@gmail.com'])
     print(content)
-    msg.body = 'GAYYYY'
+    msg.body = f'{content["name"]}: {content["message"]}\nLocated at coordinates latitude {content["lat"]}º longitude {content["lng"]}º' 
     mail.send(msg)
     return "Message sent!"
 
