@@ -3,10 +3,10 @@ import pandas as pd
 import sounddevice as sd
 import scipy.io.wavfile as wf
 import plotly.express as px
+import numpy as np
 import os
 import cohere
 from cohere.classify import Example
-
 
 
 def app():
@@ -28,7 +28,8 @@ def app():
     """
     )
     name = st.text_input('Enter your name')
-
+    option = st.selectbox(
+    'Do you want to use your real location (IP)?', ('IP Location', 'Slighly randomized location'))
 
     st.header("Speech to text")
 
@@ -156,14 +157,16 @@ def app():
             import geocoder
             g = geocoder.ip('me')
             lat, lng = g.latlng
+            if option != 'IP Location':
+                lat = lat + np.random.random()/20
+                lng = lng + np.random.random()/20
             df = df.append([{'Name': name, 'Recorded Text': transcriptions, 'lat': lat, 'lon': lng}])
             df.to_csv('dades.csv', index=False)
 
             # Enviar el missatge
-            #import requests as r
-            #r.post('http://127.0.0.1:5000/emergency',
-            #    json={'name': name, 'lat': lat, 'lng': lng, 'message': transcriptions})
-
+            import requests as r
+            r.post('http://127.0.0.1:5000/emergency',
+                json={'name': name, 'lat': lat, 'lng': lng, 'message': transcriptions})
         
     st.header("Map Plot")
     # Map Part
@@ -183,3 +186,5 @@ def app():
 
     st.plotly_chart(fig)
 
+
+    st.write("Check it out! [GitHub](https://github.com/datathon-fme-2022/ageing-challenge)")
