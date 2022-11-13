@@ -7,3 +7,4 @@ librosa
 torch
 cohere
 geocoder
+requests
