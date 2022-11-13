@@ -2,15 +2,24 @@ import streamlit as st
 import pandas as pd
 import sounddevice as sd
 import scipy.io.wavfile as wf
+import plotly.express as px
 import os
+
 
 # Streamlit executa repetidament tot el codi escrit,
 # i si detecta canvis actualitza dinàmicament la pàgina web
 
+st.title('Age watch')
+
+
+
 if not os.path.exists('dades.csv'):
-    df = pd.DataFrame([[41.4, 2.17]], columns=['lat', 'lon'])
+    df = pd.DataFrame(data=[{"Name": "Rogelia", "Recorded Text": "Help, I am dying", "lat": 41.39, "lon": 2.16}],
+        columns=["Name", "Recorded Text", "lat", "lon"])
     df.to_csv('dades.csv')
 df = pd.read_csv('dades.csv')
+
+name = st.text_input('Enter your name')
 
 if st.button("Record"):
 
@@ -114,13 +123,27 @@ if st.button("Record"):
         import geocoder
         g = geocoder.ip('me')
         lat, lng = g.latlng
-        df = df.append([{'lat': lat, 'lon': lng}])
+        df = df.append([{'Name': name, 'Recorded Text': transcriptions, 'lat': lat, 'lon': lng}])
         df.to_csv('dades.csv', index=False)
 
-    # Faltaria la part d'enviar el missatge
-    import requests as r
-    
-    r.post('http://127.0.0.1:5000/emergency', json={'name': 'andreu'})
+        # Enviar el missatge
+        import requests as r
+        r.post('http://127.0.0.1:5000/emergency',
+            json={'name': name, 'lat': lat, 'lng': lng, 'message': transcriptions})
 
 
-st.map(df)
+fig = px.scatter_mapbox(
+    df,
+    lat="lat",
+    lon="lon",
+    hover_name="Name",
+    hover_data=["Recorded Text"],
+    color_discrete_sequence=["red"],
+    zoom=12,
+    height=500
+)
+fig.update_traces(marker={'size': 15})
+fig.update_layout(mapbox_style="open-street-map")
+fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+st.plotly_chart(fig)
