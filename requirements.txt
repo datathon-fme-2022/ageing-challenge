@@ -8,3 +8,4 @@ torch
 cohere
 geocoder
 requests
+plotly
