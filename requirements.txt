@@ -2,6 +2,7 @@ streamlit
 pandas
 pyaudio
 wave
+os
 transformers
 librosa
 torch
