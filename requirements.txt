@@ -1,7 +1,7 @@
 streamlit
 pandas
-sounddevice
-scipy
+streamlit_webrtc
+aiortc
 transformers
 librosa
 torch
