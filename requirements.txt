@@ -9,3 +9,4 @@ cohere
 geocoder
 requests
 plotly
+geopandas
