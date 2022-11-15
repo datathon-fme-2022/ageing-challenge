@@ -187,12 +187,13 @@ def app():
         st.markdown(f'Prediction: <p style="color:Red;">Emergency added!</p>', unsafe_allow_html=True)
 
         # Add point to the map if emergency
-        import geocoder
-        g = geocoder.ip('me')
-        lat, lng = g.latlng
-        if option != 'IP Location':
-            lat = lat + np.random.random()/20
-            lng = lng + np.random.random()/20
+        #import geocoder
+        #g = geocoder.ip('me')
+        #lat, lng = g.latlng
+        #if option != 'IP Location':
+        lat, lng = 41.3874, 2.1686
+        lat = lat + np.random.random()/20
+        lng = lng + np.random.random()/20
         df = df.append([{'Name': name, 'Recorded Text': transcriptions, 'lat': lat, 'lon': lng}])
         df.to_csv('dades.csv', index=False)
 

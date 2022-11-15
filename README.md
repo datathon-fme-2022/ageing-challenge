@@ -1,5 +1,7 @@
 # Granny's Watch
 
+After Datathon Update: deployed on [Granny's Watch](https://datathon-fme-2022-ageing-challenge-main-app-4uyvyq.streamlit.app/)
+
 ## Background
 
 Granny's Watch exists to be able to detect when an elderly person's health is in immediate danger. 
@@ -14,7 +16,6 @@ In order to be able to use the code, a Python version of 3.10 is required to ens
 
 ```shell
     pip install -r requirements.txt
-    flask run
     streamlit run main_app.py
 ```
 
