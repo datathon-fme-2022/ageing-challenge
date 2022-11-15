@@ -6,6 +6,7 @@ from aiortc.contrib.media import MediaRecorder
 import numpy as np
 import os
 import cohere
+from scipy.io import wavfile
 from cohere.classify import Example
 
 
@@ -93,10 +94,11 @@ def app():
         model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
     
     with st.spinner('Transcipting audio'):
-        import librosa
         import torch
-        speech, rate = librosa.load("recording.wav", sr=sampling_rate)
-        input_audio = processor(speech, return_tensors='pt', sampling_rate=sampling_rate).input_values
+        fs, speech = wavfile.read('recording.wav')
+        a = speech.mean(axis=1)
+        b = a.reshape((a.shape[0]//3, 3)).mean(axis=1)
+        input_audio = processor(b, return_tensors='pt', sampling_rate=fs//3).input_values
         logits = model(input_audio).logits
         predicted_ids = torch.argmax(logits, dim =-1)
         transcriptions = processor.decode(predicted_ids[0]).lower()
